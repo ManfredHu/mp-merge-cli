@@ -81,23 +81,30 @@ function index() {
         _debug("\u5220\u9664\u6E90\u76EE\u5F55\u4EA7\u7269\u6587\u4EF6" + rstPath);
         shelljs_1.default.rm(rstPath);
     });
-    if (commander_1.default.enterPage) {
-        try {
-            var rstPath = path_1.default.resolve(sourceOutput, commander_1.default.enterPage) + ".js";
-            // 主页面插入app.js执行
-            var fileContent = fs_1.default.readFileSync(rstPath).toString('utf8');
-            // 如果有 "use strict";则插入后面，如果没有则直接插入开头
-            fs_1.default.writeFileSync(rstPath, fileContent.replace(/^(['"]use strict['"];)?/, '$1require("../app.js");'), 'utf8');
-            _debug(rstPath + "\u6587\u4EF6\u6CE8\u5165\u4EE3\u7801\u6210\u529F");
-            spinner.succeed("\u5206\u5305\u4EE3\u7801\u4F18\u5316\u5B8C\u6210");
+    try {
+        var enterPage = commander_1.default.enterPage;
+        if (!enterPage) {
+            // 从app.json第一个page取
+            var sourceAppObj = JSON.parse(sourceAppJson);
+            enterPage = path_1.default.resolve(sourceOutput, sourceAppObj.pages[0]) + ".js";
+            _debug('自动获取enterPage路径', enterPage);
+            spinner.succeed("\u81EA\u52A8\u83B7\u53D6enterPage\u8DEF\u5F84" + enterPage);
         }
-        catch (err) {
-            _debug("\u4EE3\u7801\u6CE8\u5165\u5931\u8D25", err);
-            spinner.fail("\u4EE3\u7801\u6CE8\u5165\u5931\u8D25");
+        else {
+            enterPage = path_1.default.resolve(sourceOutput, enterPage) + ".js";
+            _debug('获取enterPage路径', enterPage);
+            spinner.succeed("\u83B7\u53D6enterPage\u8DEF\u5F84" + enterPage);
         }
+        // 主页面插入app.js执行
+        var fileContent = fs_1.default.readFileSync(enterPage).toString('utf8');
+        // 如果有 "use strict";则插入后面，如果没有则直接插入开头
+        fs_1.default.writeFileSync(enterPage, fileContent.replace(/^(['"]use strict['"];)?/, '$1require("../app.js");'), 'utf8');
+        _debug(enterPage + "\u6587\u4EF6\u6CE8\u5165\u4EE3\u7801\u6210\u529F");
+        spinner.succeed("\u5206\u5305\u4EE3\u7801\u4F18\u5316\u5B8C\u6210");
     }
-    else {
-        spinner.fail('请输入 -e 分包入口页面相对路径');
+    catch (err) {
+        _debug("\u4EE3\u7801\u6CE8\u5165\u5931\u8D25", err);
+        spinner.fail("\u4EE3\u7801\u6CE8\u5165\u5931\u8D25");
     }
     // ------------------------------------
     // 编译目标目录文件

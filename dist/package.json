@@ -1,6 +1,6 @@
 {
     "name": "mp-merge-cli",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "小程序合包工具",
     "main": "dist/index.js",
     "bin": {
@@ -15,7 +15,7 @@
         "type": "git",
         "url": "git+https://github.com/ManfredHu/mp-merge-cli.git"
     },
-    "author": "pphu@tencent.com",
+    "author": "ManfredHuFe@gmail.com",
     "license": "MIT",
     "dependencies": {
         "commander": "^4.1.1",

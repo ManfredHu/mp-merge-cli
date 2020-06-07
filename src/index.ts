@@ -83,25 +83,29 @@ export default function index(): void {
     _debug(`删除源目录产物文件${rstPath}`)
     shell.rm(rstPath)
   })
-  if (program.enterPage) {
-    try {
-      const rstPath = `${path.resolve(sourceOutput, program.enterPage)}.js`
-      // 主页面插入app.js执行
-      const fileContent = fs.readFileSync(rstPath).toString('utf8')
-      // 如果有 "use strict";则插入后面，如果没有则直接插入开头
-      fs.writeFileSync(
-        rstPath,
-        fileContent.replace(/^(['"]use strict['"];)?/, '$1require("../app.js");'),
-        'utf8',
-      )
-      _debug(`${rstPath}文件注入代码成功`)
-      spinner.succeed(`分包代码优化完成`)
-    } catch(err) {
-      _debug(`代码注入失败`, err)
-      spinner.fail(`代码注入失败`)
+  try {
+    let enterPage = program.enterPage
+    if (!enterPage) {
+      // 从app.json第一个page取
+      const sourceAppObj = JSON.parse(sourceAppJson)
+      enterPage = `${path.resolve(sourceOutput, sourceAppObj.pages[0])}.js`
+      _debug('自动获取enterPage路径', enterPage)
+      spinner.succeed(`自动获取enterPage路径${enterPage}`)
+    } else {
+      enterPage = `${path.resolve(sourceOutput, enterPage)}.js`
+      _debug('获取enterPage路径', enterPage)
+      spinner.succeed(`获取enterPage路径${enterPage}`)
     }
-  } else {
-    spinner.fail('请输入 -e 分包入口页面相对路径')
+    
+    // 主页面插入app.js执行
+    const fileContent = fs.readFileSync(enterPage).toString('utf8')
+    // 如果有 "use strict";则插入后面，如果没有则直接插入开头
+    fs.writeFileSync(enterPage, fileContent.replace(/^(['"]use strict['"];)?/, '$1require("../app.js");'), 'utf8')
+    _debug(`${enterPage}文件注入代码成功`)
+    spinner.succeed(`分包代码优化完成`)
+  } catch (err) {
+    _debug(`代码注入失败`, err)
+    spinner.fail(`代码注入失败`)
   }
 
   // ------------------------------------
