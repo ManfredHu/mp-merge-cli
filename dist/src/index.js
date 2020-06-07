@@ -139,7 +139,10 @@ function index() {
         targetAppObj.subpackages.push(insertSubpackItme);
         fs_1.default.writeFileSync(path_1.default.resolve(targetOutput, 'app.json'), JSON.stringify(targetAppObj), 'utf8');
         _debug("\u6CE8\u5165page\u6210\u529F");
-        spinner.succeed("\u6CE8\u5165page\u6210\u529F");
+        sourceAppObj.pages.forEach(function (item) {
+            spinner.succeed("\u6CE8\u5165\u9875\u9762\u6210\u529F: " + path_1.default.basename(sourceOutput) + "/" + item);
+        });
+        // spinner.succeed(`注入page成功`)
     }
     catch (err) {
         _debug("\u6CE8\u5165page\u5931\u8D25", err);

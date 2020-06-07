@@ -145,7 +145,9 @@ export default function index(): void {
     targetAppObj.subpackages.push(insertSubpackItme)
     fs.writeFileSync(path.resolve(targetOutput, 'app.json'), JSON.stringify(targetAppObj), 'utf8')
     _debug(`注入page成功`)
-    spinner.succeed(`注入page成功`)
+    sourceAppObj.pages.forEach((item: any) => {
+      spinner.succeed(`注入页面成功: ${path.basename(sourceOutput)}/${item}`)
+    })
   } catch(err){
     _debug(`注入page失败`, err)
     spinner.fail(`注入page失败`)
