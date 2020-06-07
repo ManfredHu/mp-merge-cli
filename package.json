@@ -10,7 +10,8 @@
   "scripts": {
     "dev": "rm -rf ./dist/src/ && nodemon --exec 'tsc'",
     "build": "rm -rf ./dist/src/ && tsc",
-    "commit": "npx git-cz"
+    "commit": "npx git-cz",
+    "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "repository": {
     "type": "git",
