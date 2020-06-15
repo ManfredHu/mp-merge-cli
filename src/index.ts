@@ -17,6 +17,7 @@ export default function index(): void {
     .option('-e, --enterPage <enterPage>', '分包入口页面相对路径')
     .option('cleanOutput', '清空产物目录')
     .option('independent', '是否独立分包')
+    .option('preloadSubpackages', '是否复制分包预加载信息')
     .parse(process.argv)
 
   const spinner = ora().start('正在处理请稍后')
@@ -143,8 +144,17 @@ export default function index(): void {
       independent: !!program.independent,
     }
     targetAppObj.subpackages.push(insertSubpackItme)
+
+    if (program.preloadSubpackages) {
+      _debug(`注入分包预加载信息成功`, JSON.stringify(sourceAppObj.preloadRule))
+      spinner.succeed(`注入分包预加载信息成功: ${JSON.stringify(sourceAppObj.preloadRule)}`)
+      targetAppObj.preloadRule = sourceAppObj.preloadRule
+    }
+
     fs.writeFileSync(path.resolve(targetOutput, 'app.json'), JSON.stringify(targetAppObj), 'utf8')
     _debug(`注入page成功`)
+
+    // console
     sourceAppObj.pages.forEach((item: any) => {
       spinner.succeed(`注入页面成功: ${path.basename(sourceOutput)}/${item}`)
     })

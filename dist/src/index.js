@@ -19,6 +19,7 @@ function index() {
         .option('-e, --enterPage <enterPage>', '分包入口页面相对路径')
         .option('cleanOutput', '清空产物目录')
         .option('independent', '是否独立分包')
+        .option('preloadSubpackages', '是否复制分包预加载信息')
         .parse(process.argv);
     var spinner = ora_1.default().start('正在处理请稍后');
     // source/cmd目录编译命令 target/cmd目录编译命令
@@ -137,12 +138,17 @@ function index() {
             independent: !!commander_1.default.independent,
         };
         targetAppObj.subpackages.push(insertSubpackItme);
+        if (commander_1.default.preloadSubpackages) {
+            _debug("\u6CE8\u5165\u5206\u5305\u9884\u52A0\u8F7D\u4FE1\u606F\u6210\u529F", JSON.stringify(sourceAppObj.preloadRule));
+            spinner.succeed("\u6CE8\u5165\u5206\u5305\u9884\u52A0\u8F7D\u4FE1\u606F\u6210\u529F: " + JSON.stringify(sourceAppObj.preloadRule));
+            targetAppObj.preloadRule = sourceAppObj.preloadRule;
+        }
         fs_1.default.writeFileSync(path_1.default.resolve(targetOutput, 'app.json'), JSON.stringify(targetAppObj), 'utf8');
         _debug("\u6CE8\u5165page\u6210\u529F");
+        // console
         sourceAppObj.pages.forEach(function (item) {
             spinner.succeed("\u6CE8\u5165\u9875\u9762\u6210\u529F: " + path_1.default.basename(sourceOutput) + "/" + item);
         });
-        // spinner.succeed(`注入page成功`)
     }
     catch (err) {
         _debug("\u6CE8\u5165page\u5931\u8D25", err);
