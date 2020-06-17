@@ -15,7 +15,8 @@ export default function index(): void {
     .option('-o, --sourceOutput <sourceOutput>', '源目录产物目录')
     .option('-O, --targetOutput <targetOutput>', '目标目录产物目录')
     .option('-e, --enterPage <enterPage>', '分包入口页面相对路径')
-    .option('cleanOutput', '清空产物目录')
+    .option('cleanTargetOutput', '清空目标目录产物目录')
+    .option('cleanSourceOutput', '清空源目录产物目录')
     .option('independent', '是否独立分包')
     .option('preloadSubpackages', '是否复制分包预加载信息')
     .parse(process.argv)
@@ -29,7 +30,8 @@ export default function index(): void {
   _debug(`program.targetCmd`, program.targetCmd)
   _debug(`program.sourceOutput`, program.sourceOutput)
   _debug(`program.targetOutput`, program.targetOutput)
-  _debug(`program.cleanOutput`, program.cleanOutput)
+  _debug(`program.cleanTargetOutput`, program.cleanTargetOutput)
+  _debug(`program.cleanSourceOutput`, program.cleanSourceOutput)
 
   // ------------------------------------
   // check参数
@@ -40,8 +42,8 @@ export default function index(): void {
   }
   const sourceOutput = path.resolve(program.sourceOutput)
   const targetOutput = path.resolve(program.targetOutput)
-  if (program.cleanOutput) {
-    if (typeof program.sourceOutput === 'string') {
+  if (program.cleanTargetOutput || program.cleanSourceOutput) {
+    if (typeof program.sourceOutput === 'string' && program.cleanSourceOutput) {
       if (fs.existsSync(sourceOutput)) {
         _debug(`需要删除的目录`, sourceOutput)
         shell.rm('-rf', path.resolve(program.sourceOutput))
@@ -51,7 +53,7 @@ export default function index(): void {
         spinner.fail(`删除目录${sourceOutput}失败`)
       }
     }
-    if (typeof program.targetOutput === 'string') {
+    if (typeof program.targetOutput === 'string' && program.cleanTargetOutput) {
       if (fs.existsSync(targetOutput)) {
         _debug(`需要删除的目录`, targetOutput)
         shell.rm('-rf', path.resolve(program.targetOutput))
@@ -66,10 +68,12 @@ export default function index(): void {
   // ------------------------------------
   // 编译优化源目录文件
   // ------------------------------------
-  const sourcePath = path.dirname(sourceOutput)
-  const sourcePathRst = shell.exec(`cd ${sourcePath} && ${program.sourceCmd}`)
-  if (sourcePathRst.code === 0) {
-    spinner.succeed(`源目录${sourcePath}编译成功`)
+  if (program.sourceCmd) {
+    const sourcePath = path.dirname(sourceOutput)
+    const sourcePathRst = shell.exec(`cd ${sourcePath} && ${program.sourceCmd}`)
+    if (sourcePathRst.code === 0) {
+      spinner.succeed(`源目录${sourcePath}编译成功`)
+    }
   }
 
   // 记录下需要注入的page后面使用
@@ -112,11 +116,14 @@ export default function index(): void {
   // ------------------------------------
   // 编译目标目录文件
   // ------------------------------------
-  const targetPath = path.dirname(targetOutput)
-  const targetPathRst = shell.exec(`cd ${targetPath} && ${program.sourceCmd}`)
-  if (targetPathRst.code === 0) {
-    spinner.succeed(`目标目录${targetPath}编译成功`)
+  if (program.targetCmd) {
+    const targetPath = path.dirname(targetOutput)
+    const targetPathRst = shell.exec(`cd ${targetPath} && ${program.targetCmd}`)
+    if (targetPathRst.code === 0) {
+      spinner.succeed(`目标目录${targetPath}编译成功`)
+    }
   }
+  
 
   // ------------------------------------
   // 拷贝代码并注入页面
@@ -134,8 +141,8 @@ export default function index(): void {
   try {
     const sourceAppObj = JSON.parse(sourceAppJson)
     const targetAppObj = JSON.parse(targetAppJson)
-    if (!Array.isArray(targetAppObj.subpackages)) {
-      targetAppObj.subpackages = []
+    if (!Array.isArray(targetAppObj.subPackages)) {
+      targetAppObj.subPackages = []
     }
 
     const insertSubpackItme: InsertSubpackItme = {
@@ -143,7 +150,7 @@ export default function index(): void {
       pages: sourceAppObj.pages,
       independent: !!program.independent,
     }
-    targetAppObj.subpackages.push(insertSubpackItme)
+    targetAppObj.subPackages.push(insertSubpackItme)
 
     if (program.preloadSubpackages) {
       _debug(`注入分包预加载信息成功`, JSON.stringify(sourceAppObj.preloadRule))

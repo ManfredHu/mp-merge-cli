@@ -35,7 +35,8 @@ mp-merge cleanOutput independent -o './indepent' -O '../B/dist' -e './pages/main
 | -o或者--sourceOutput | 源目录产物目录       | 无            | 是       |
 | -O或者--targetOutput | 目标目录产物目录     | 无            | 是       |
 | -e或者--enterPage    | 分包入口页面相对路径 | 源目录产物目录app.json里第一个page| 否       |
-| cleanOutput          | 清空产物目录         | false         | 否       |
+| cleanTargetOutput          | 清空目标目录产物目录         | false         | 否       |
+| cleanSourceOutput          | 清空源目录产物目录         | false         | 否       |
 | independent          | 是否独立分包         | false         | 否       |
 
 

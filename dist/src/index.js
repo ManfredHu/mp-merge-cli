@@ -17,7 +17,8 @@ function index() {
         .option('-o, --sourceOutput <sourceOutput>', '源目录产物目录')
         .option('-O, --targetOutput <targetOutput>', '目标目录产物目录')
         .option('-e, --enterPage <enterPage>', '分包入口页面相对路径')
-        .option('cleanOutput', '清空产物目录')
+        .option('cleanTargetOutput', '清空目标目录产物目录')
+        .option('cleanSourceOutput', '清空源目录产物目录')
         .option('independent', '是否独立分包')
         .option('preloadSubpackages', '是否复制分包预加载信息')
         .parse(process.argv);
@@ -29,7 +30,8 @@ function index() {
     _debug("program.targetCmd", commander_1.default.targetCmd);
     _debug("program.sourceOutput", commander_1.default.sourceOutput);
     _debug("program.targetOutput", commander_1.default.targetOutput);
-    _debug("program.cleanOutput", commander_1.default.cleanOutput);
+    _debug("program.cleanTargetOutput", commander_1.default.cleanTargetOutput);
+    _debug("program.cleanSourceOutput", commander_1.default.cleanSourceOutput);
     // ------------------------------------
     // check参数
     // ------------------------------------
@@ -39,8 +41,8 @@ function index() {
     }
     var sourceOutput = path_1.default.resolve(commander_1.default.sourceOutput);
     var targetOutput = path_1.default.resolve(commander_1.default.targetOutput);
-    if (commander_1.default.cleanOutput) {
-        if (typeof commander_1.default.sourceOutput === 'string') {
+    if (commander_1.default.cleanTargetOutput || commander_1.default.cleanSourceOutput) {
+        if (typeof commander_1.default.sourceOutput === 'string' && commander_1.default.cleanSourceOutput) {
             if (fs_1.default.existsSync(sourceOutput)) {
                 _debug("\u9700\u8981\u5220\u9664\u7684\u76EE\u5F55", sourceOutput);
                 shelljs_1.default.rm('-rf', path_1.default.resolve(commander_1.default.sourceOutput));
@@ -51,7 +53,7 @@ function index() {
                 spinner.fail("\u5220\u9664\u76EE\u5F55" + sourceOutput + "\u5931\u8D25");
             }
         }
-        if (typeof commander_1.default.targetOutput === 'string') {
+        if (typeof commander_1.default.targetOutput === 'string' && commander_1.default.cleanTargetOutput) {
             if (fs_1.default.existsSync(targetOutput)) {
                 _debug("\u9700\u8981\u5220\u9664\u7684\u76EE\u5F55", targetOutput);
                 shelljs_1.default.rm('-rf', path_1.default.resolve(commander_1.default.targetOutput));
@@ -66,10 +68,12 @@ function index() {
     // ------------------------------------
     // 编译优化源目录文件
     // ------------------------------------
-    var sourcePath = path_1.default.dirname(sourceOutput);
-    var sourcePathRst = shelljs_1.default.exec("cd " + sourcePath + " && " + commander_1.default.sourceCmd);
-    if (sourcePathRst.code === 0) {
-        spinner.succeed("\u6E90\u76EE\u5F55" + sourcePath + "\u7F16\u8BD1\u6210\u529F");
+    if (commander_1.default.sourceCmd) {
+        var sourcePath = path_1.default.dirname(sourceOutput);
+        var sourcePathRst = shelljs_1.default.exec("cd " + sourcePath + " && " + commander_1.default.sourceCmd);
+        if (sourcePathRst.code === 0) {
+            spinner.succeed("\u6E90\u76EE\u5F55" + sourcePath + "\u7F16\u8BD1\u6210\u529F");
+        }
     }
     // 记录下需要注入的page后面使用
     var sourceAppJson = fs_1.default.readFileSync(path_1.default.resolve(sourceOutput, 'app.json'), 'utf8');
@@ -110,10 +114,12 @@ function index() {
     // ------------------------------------
     // 编译目标目录文件
     // ------------------------------------
-    var targetPath = path_1.default.dirname(targetOutput);
-    var targetPathRst = shelljs_1.default.exec("cd " + targetPath + " && " + commander_1.default.sourceCmd);
-    if (targetPathRst.code === 0) {
-        spinner.succeed("\u76EE\u6807\u76EE\u5F55" + targetPath + "\u7F16\u8BD1\u6210\u529F");
+    if (commander_1.default.targetCmd) {
+        var targetPath = path_1.default.dirname(targetOutput);
+        var targetPathRst = shelljs_1.default.exec("cd " + targetPath + " && " + commander_1.default.targetCmd);
+        if (targetPathRst.code === 0) {
+            spinner.succeed("\u76EE\u6807\u76EE\u5F55" + targetPath + "\u7F16\u8BD1\u6210\u529F");
+        }
     }
     // ------------------------------------
     // 拷贝代码并注入页面
@@ -129,15 +135,15 @@ function index() {
     try {
         var sourceAppObj = JSON.parse(sourceAppJson);
         var targetAppObj = JSON.parse(targetAppJson);
-        if (!Array.isArray(targetAppObj.subpackages)) {
-            targetAppObj.subpackages = [];
+        if (!Array.isArray(targetAppObj.subPackages)) {
+            targetAppObj.subPackages = [];
         }
         var insertSubpackItme = {
             root: path_1.default.basename(sourceOutput) + "/",
             pages: sourceAppObj.pages,
             independent: !!commander_1.default.independent,
         };
-        targetAppObj.subpackages.push(insertSubpackItme);
+        targetAppObj.subPackages.push(insertSubpackItme);
         if (commander_1.default.preloadSubpackages) {
             _debug("\u6CE8\u5165\u5206\u5305\u9884\u52A0\u8F7D\u4FE1\u606F\u6210\u529F", JSON.stringify(sourceAppObj.preloadRule));
             spinner.succeed("\u6CE8\u5165\u5206\u5305\u9884\u52A0\u8F7D\u4FE1\u606F\u6210\u529F: " + JSON.stringify(sourceAppObj.preloadRule));
