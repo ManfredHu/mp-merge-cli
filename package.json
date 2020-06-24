@@ -1,6 +1,6 @@
 {
   "name": "mp-merge-cli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "小程序合包工具",
   "main": "dist/index.js",
   "bin": {

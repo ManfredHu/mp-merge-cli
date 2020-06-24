@@ -8,6 +8,7 @@ var path_1 = tslib_1.__importDefault(require("path"));
 var ora_1 = tslib_1.__importDefault(require("ora"));
 var debug_1 = tslib_1.__importDefault(require("debug"));
 var shelljs_1 = tslib_1.__importDefault(require("shelljs"));
+var util_1 = require("./util");
 var _debug = debug_1.default('mm:index');
 function index() {
     commander_1.default
@@ -102,10 +103,19 @@ function index() {
         }
         // 主页面插入app.js执行
         var fileContent = fs_1.default.readFileSync(enterPage).toString('utf8');
-        // 如果有 "use strict";则插入后面，如果没有则直接插入开头
-        fs_1.default.writeFileSync(enterPage, fileContent.replace(/^(['"]use strict['"];)?/, '$1require("../app.js");'), 'utf8');
-        _debug(enterPage + "\u6587\u4EF6\u6CE8\u5165\u4EE3\u7801\u6210\u529F");
-        spinner.succeed("\u5206\u5305\u4EE3\u7801\u4F18\u5316\u5B8C\u6210");
+        // 根据enterPage路径向上寻找app.js文件
+        var _a = util_1.getFilePath(enterPage, 'app.js', path_1.default.resolve(commander_1.default.sourceOutput)), rst = _a.rst, relativePath = _a.relativePath;
+        _debug("\u9012\u5F52\u5BFB\u627Eapp.js\u6587\u4EF6\u7ED3\u679C", rst, relativePath);
+        if (rst) {
+            // 如果有 "use strict";则插入后面，如果没有则直接插入开头
+            fs_1.default.writeFileSync(enterPage, fileContent.replace(/^(['"]use strict['"];)?/, "$1require(\"" + relativePath + "\");"), 'utf8');
+            _debug(enterPage + "\u6587\u4EF6\u6CE8\u5165\u4EE3\u7801\u6210\u529F");
+            spinner.succeed("\u5206\u5305\u4EE3\u7801\u4F18\u5316\u5B8C\u6210");
+        }
+        else {
+            _debug("\u4EE3\u7801\u6CE8\u5165\u5931\u8D25", rst, relativePath);
+            spinner.fail("\u4EE3\u7801\u6CE8\u5165\u5931\u8D25");
+        }
     }
     catch (err) {
         _debug("\u4EE3\u7801\u6CE8\u5165\u5931\u8D25", err);

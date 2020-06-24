@@ -5,6 +5,7 @@ import path from 'path'
 import ora from 'ora'
 import debug from 'debug'
 import shell from 'shelljs'
+import { getFilePath } from './util';
 const _debug = debug('mm:index')
 
 export default function index(): void {
@@ -104,10 +105,19 @@ export default function index(): void {
     
     // 主页面插入app.js执行
     const fileContent = fs.readFileSync(enterPage).toString('utf8')
-    // 如果有 "use strict";则插入后面，如果没有则直接插入开头
-    fs.writeFileSync(enterPage, fileContent.replace(/^(['"]use strict['"];)?/, '$1require("../app.js");'), 'utf8')
-    _debug(`${enterPage}文件注入代码成功`)
-    spinner.succeed(`分包代码优化完成`)
+
+    // 根据enterPage路径向上寻找app.js文件
+    const { rst, relativePath } = getFilePath(enterPage, 'app.js', path.resolve(program.sourceOutput))
+    _debug(`递归寻找app.js文件结果`, rst, relativePath)
+    if (rst) {
+      // 如果有 "use strict";则插入后面，如果没有则直接插入开头
+      fs.writeFileSync(enterPage, fileContent.replace(/^(['"]use strict['"];)?/, `$1require("${relativePath}");`), 'utf8')
+      _debug(`${enterPage}文件注入代码成功`)
+      spinner.succeed(`分包代码优化完成`)
+    } else {
+      _debug(`代码注入失败`, rst, relativePath)
+      spinner.fail(`代码注入失败`)  
+    }
   } catch (err) {
     _debug(`代码注入失败`, err)
     spinner.fail(`代码注入失败`)
