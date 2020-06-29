@@ -54,8 +54,8 @@ mm babelCompile uglifyjsCompress cleanTargetOutput cleanSourceOutput independent
 | babelCompile          | 是否对源目录产物进行babel7编译         | false         | 否       |
 | uglifyjsCompress          | 是否对源目录产物进行uglifyjs代码压缩         | false         | 否       |
 | -g或--glob          | uglify代码压缩传入的glob匹配压缩文件        | './**/*.js'         | 否       |
-| -i或--globIgnore          | uglify代码压缩传入的glob忽略文件        | '**/node_modules/**'         | 
-否       |
+| -i或--globIgnore          | uglify代码压缩传入的glob忽略文件        | '\*\*/node_modules/\*\*'         | 否  |
+
 
 ## 调试
 其中`DEBUG=mm:*`为环境变量，调试用。
@@ -71,5 +71,5 @@ mm --help
 ```
 
 ## 特性
-2020-06-15 v1.0.1增加分包预加载支持
-2020-06-29 v1.1.0增加kbone合包支持,babel代码编译,uglifyjs代码压缩
+- 2020-06-15 v1.0.1增加分包预加载支持
+- 2020-06-29 v1.1.0增加kbone合包支持,babel代码编译,uglifyjs代码压缩
