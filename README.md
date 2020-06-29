@@ -54,8 +54,8 @@ mm babelCompile uglifyjsCompress cleanTargetOutput cleanSourceOutput independent
 | babelCompile          | 是否对源目录产物进行babel7编译         | false         | 否       |
 | uglifyjsCompress          | 是否对源目录产物进行uglifyjs代码压缩         | false         | 否       |
 | -g或--glob          | uglify代码压缩传入的glob匹配压缩文件        | './**/*.js'         | 否       |
-| -i或--globIgnore          | uglify代码压缩传入的glob忽略文件        | '**/node_modules/**'         | 
-否       |
+| -i或--globIgnore          | uglify代码压缩传入的glob忽略文件        | '**/node_modules/**'         | 否  |
+
 
 ## 调试
 其中`DEBUG=mm:*`为环境变量，调试用。
