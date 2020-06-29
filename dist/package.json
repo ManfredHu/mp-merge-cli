@@ -1,6 +1,6 @@
 {
     "name": "mp-merge-cli",
-    "version": "1.0.3",
+    "version": "1.1.0",
     "description": "小程序合包工具",
     "main": "dist/index.js",
     "bin": {
@@ -20,12 +20,17 @@
     "author": "ManfredHuFe@gmail.com",
     "license": "MIT",
     "dependencies": {
+        "@babel/cli": "^7.10.3",
+        "@babel/core": "^7.10.3",
+        "@babel/preset-env": "^7.10.3",
         "commander": "^4.1.1",
         "dayjs": "^1.8.23",
         "debug": "^4.1.1",
+        "glob": "^7.1.6",
         "ora": "^4.0.3",
         "shelljs": "^0.8.4",
-        "tslib": "^1.11.1"
+        "tslib": "^1.11.1",
+        "uglify-js": "^3.10.0"
     },
     "devDependencies": {
         "@types/axios": "^0.14.0",
