@@ -11,7 +11,7 @@
 - kbone
 
 ## 原理
-![](https://manfredhu-1252588796.cos.ap-guangzhou.myqcloud.com/mp-merge-cli%E5%8E%9F%E7%90%86.png)
+![mp-merge-cli原理](./picture/mp-merge-cli原理.png)
 
 ## 安装
 

@@ -2,7 +2,6 @@
 
 - kbone-demo1 from[https://github.com/Tencent/kbone/tree/develop/examples/demo1](https://github.com/Tencent/kbone/tree/develop/examples/demo1)
 - wepy-wechat-demo from[https://github.com/wepyjs/wepy-wechat-demo](https://github.com/wepyjs/wepy-wechat-demo)
-- miniprogram-demo from[https://github.com/wechat-miniprogram/miniprogram-demo](https://github.com/wechat-miniprogram/miniprogram-demo)
 
 ## 操作方法
 运行当前目录的`merge.sh`脚本
