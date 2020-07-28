@@ -15,7 +15,6 @@ sh merge.sh
 ```bash
 wepy-wechat-demo
   - dist 主小程序目录
-    - miniprogram 原生小程序目录，对应上面的miniprogram-demo项目
     - kbone kbone小程序目录，对应上面的kbone-demo1项目
 ```
 
