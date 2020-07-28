@@ -1,0 +1,52 @@
+<style type='scss'>
+body {
+    margin: 0px;
+    padding: 0px;
+    background-color: #f0eff5;
+}
+</style>
+
+<script>
+
+import wepy from 'wepy';
+import 'wepy-async-function';
+
+export default class extends wepy.app {
+
+    config = {
+        'pages': [
+            'pages/index',
+            'pages/chat'
+        ],
+        'window': {
+            'backgroundTextStyle': 'light',
+            'navigationBarBackgroundColor': '#3b3a40',
+            'navigationBarTitleText': 'WeChat',
+            'navigationBarTextStyle': 'black'
+        }
+    };
+
+    constructor () {
+        super();
+        this.use('promisify');
+        this.use('requestfix');
+    }
+
+    globalData = {
+        userInfo: null
+    };
+
+    onLaunch() {
+    }
+
+    async getUserInfo() {
+        if (this.globalData.userInfo) {
+            return this.globalData.userInfo;
+        }
+        await wx.login();
+        let res = await wx.getUserInfo();
+        this.globalData.userInfo = res.userInfo;
+        return res.userInfo;
+    }
+}
+</script>

@@ -27,3 +27,9 @@ yarn-error.log*
 
 # 业务参数，这里忽略普通生成的测试样例文件
 /*.spec.js
+
+example/kbone-demo1/dist
+example/kbone-demo1/node_modules
+example/wepy-wechat-demo/dist
+example/wepy-wechat-demo/node_modules
+example/wepy-wechat-demo/antdist

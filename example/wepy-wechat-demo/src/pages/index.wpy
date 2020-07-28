@@ -1,0 +1,80 @@
+<style type="scss">
+.tab_item {
+    height: 100%;
+}
+page, .body{
+    height: 100%;
+    font-family: '\5FAE\8F6F\96C5\9ED1', arial;
+    background-color: #f0eff5;
+}
+</style>
+<template>
+    <view class="body">
+        <view class="tab_item tab_message" hidden="{{currentTab != 0}}">
+            <message />
+        </view>
+        <view class="tab_item tab_contact" hidden="{{currentTab != 1}}">
+            <contact />
+        </view>
+        <view class="tab_item tab_discovery" hidden="{{currentTab != 2}}">
+            <discovery />
+        </view>
+        <view class="tab_item tab_me" hidden="{{currentTab != 3}}">
+            <me />
+        </view>
+
+        <tab :active.sync="currentTab" />
+        <toast />
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import Message from '../components/message';
+    import Discovery from '../components/discovery';
+    import Contact from '../components/contact';
+    import Me from '../components/me';
+    import Tab from '../components/tab';
+
+    import Toast from 'wepy-com-toast';
+
+    export default class Index extends wepy.page {
+        config = {
+            'navigationBarTitleText': 'wepy - 微信',
+            'navigationBarTextStyle': 'white',
+            'navigationBarBackgroundColor': '#3b3a40'
+        };
+
+        components = {
+            message: Message,
+            discovery: Discovery,
+            me: Me,
+            contact: Contact,
+            tab: Tab,
+            toast: Toast
+        };
+
+        data = {
+            currentTab: 0
+        };
+
+        methods = {
+        };
+
+        onShow() {
+            this.currentTab = 0;
+            this.$invoke('message', 'loadMessage');
+        }
+
+        showToast(name) {
+            let promise = this.$invoke('toast', 'show', {
+                title: `${name}`,
+                img: 'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
+            });
+
+            promise.then((d) => {
+                console.log('toast done');
+            });
+        }
+    }
+</script>
