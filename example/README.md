@@ -4,6 +4,12 @@
 - wepy-wechat-demo from[https://github.com/wepyjs/wepy-wechat-demo](https://github.com/wepyjs/wepy-wechat-demo)
 
 ## 操作方法
+### 安装cli工具
+```bash
+sudo npm i -g mp-merge-cli@latest
+```
+
+### 运行Shell脚本
 运行当前目录的`merge.sh`脚本
 
 ```bash
@@ -17,7 +23,6 @@ wepy-wechat-demo
   - dist 主小程序目录
     - kbone kbone小程序目录，对应上面的kbone-demo1项目
 ```
-
 微信开发工具打开项目目录miniprogram-demo，会看到如下
 ![wepy](./picture/1.png)
 
