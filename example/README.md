@@ -1,7 +1,7 @@
 # 合包示例
 
-- kbone-demo1 from[https://github.com/Tencent/kbone/tree/develop/examples/demo1](https://github.com/Tencent/kbone/tree/develop/examples/demo1)
-- wepy-wechat-demo from[https://github.com/wepyjs/wepy-wechat-demo](https://github.com/wepyjs/wepy-wechat-demo)
+- kbone-demo1 from [https://github.com/Tencent/kbone/tree/develop/examples/demo1](https://github.com/Tencent/kbone/tree/develop/examples/demo1)
+- wepy-wechat-demo from [https://github.com/wepyjs/wepy-wechat-demo](https://github.com/wepyjs/wepy-wechat-demo)
 
 ## 操作方法
 ### 安装cli工具
